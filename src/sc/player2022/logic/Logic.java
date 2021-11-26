@@ -8,14 +8,17 @@ import sc.player.IGameHandler;
 import sc.plugin2022.Coordinates;
 import sc.plugin2022.GameState;
 import sc.plugin2022.Move;
+import sc.plugin2022.Piece;
 import sc.shared.GameResult;
 
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Das Herz des Clients:
- * Eine sehr simple Logik, die ihre Zuege zufaellig waehlt,
- * aber gueltige Zuege macht.
+ * Das Herz des Clients: Eine sehr simple Logik, die ihre Zuege zufaellig
+ * waehlt, aber gueltige Zuege macht.
  * <p>
  * Ausserdem werden zum Spielverlauf Konsolenausgaben gemacht.
  */
@@ -28,27 +31,30 @@ public class Logic implements IGameHandler {
   public void onGameOver(GameResult data) {
     log.info("Das Spiel ist beendet, Ergebnis: {}", data);
   }
-  
-  
 
-  
   @Override
   public Move calculateMove() {
     long startTime = System.currentTimeMillis();
     log.info("Es wurde ein Zug von {} angefordert.", gameState.getCurrentTeam());
 
     List<Move> possibleMoves = gameState.getPossibleMoves();
-    System.out.println("Anzahl der m�glichen Z�ge: "+possibleMoves.size());
-    
-    for (Move m : possibleMoves) {
-    	System.out.println(m.toString());
-    	System.out.println(gameState.getBoard().get(m.getFrom().getX(),
-    			m.getFrom().getY()));
+    System.out.println("Anzahl der m�glichen Z�ge: " + possibleMoves.size());
 
-    	
+    for (Move m : possibleMoves) {
+      System.out.println(m.toString());
+      System.out.println(gameState.getBoard().get(m.getFrom().getX(), m.getFrom().getY()));
+
     }
-    
-    
+
+    // CurrentPieces
+    Map<Coordinates, Piece> p = new HashMap<>();
+    p = gameState.getCurrentPieces();
+    System.out.println("Count Pieces:" + p.size());
+    for (Map.Entry<Coordinates, Piece> singleP : p.entrySet()) {
+      System.out.println(singleP.getKey() + "/" + singleP.getValue());
+    }
+
+
     Move move = calcE1(possibleMoves);
     
     //Move move = possibleMoves.get((int) (Math.random() * possibleMoves.size()));
@@ -98,5 +104,6 @@ public class Logic implements IGameHandler {
     //Berechnung
     return score;
   }
+  
 }
 
